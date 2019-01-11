@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.nabilla.myapplication.MainActivity">
+
+    <item
+        android:id="@+id/action_connect_bluetooth"
+        android:orderInCategory="100"
+        android:title="Connect"
+        android:icon="@mipmap/ic_action_bluetooth_on"
+        app:showAsAction="ifRoom" />
+
+
+</menu>
