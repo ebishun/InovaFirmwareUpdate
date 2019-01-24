@@ -125,8 +125,8 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
 
     InputStream inputFile, inputA,inputB;
     String fileName = "";
-    String fileNameA = "unlv1_0e03_v0_17a";
-    String fileNameB = "unlv1_0e03_v0_17b";
+    String fileNameA = "unlv1_0e03_v0_20a";
+    String fileNameB = "unlv1_0e03_v0_20b";
 
 
     private boolean isCurrentFirmwareA = false;
@@ -160,8 +160,8 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
 
         refreshTimer = new MyRefreshTimer(startTime, interval);
 
-        inputA = getResources().openRawResource(R.raw.unlv1_0e03_v0_17a);
-        inputB = getResources().openRawResource(R.raw.unlv1_0e03_v0_17b);
+        inputA = getResources().openRawResource(R.raw.unlv1_0e03_v0_20a);
+        inputB = getResources().openRawResource(R.raw.unlv1_0e03_v0_20b);
 
         initIntentFilter();
         initPermission();
@@ -513,8 +513,8 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                     refreshTimer.start();
                     */
 
-                    inputA = getResources().openRawResource(R.raw.unlv1_0e03_v0_17a);
-                    inputB = getResources().openRawResource(R.raw.unlv1_0e03_v0_17b);
+                    inputA = getResources().openRawResource(R.raw.unlv1_0e03_v0_20a);
+                    inputB = getResources().openRawResource(R.raw.unlv1_0e03_v0_20b);
 
                     binSize = 0;
                     begin = 0;
