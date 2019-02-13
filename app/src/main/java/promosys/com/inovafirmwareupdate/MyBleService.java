@@ -1,4 +1,4 @@
-package promosys.com.unarvusoftwareupdate;
+package promosys.com.inovafirmwareupdate;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -19,9 +19,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -151,7 +149,7 @@ public class MyBleService extends Service {
                 }
 
                 if(isScanForNearbyDevice){
-                    if(device.getName().contains("0E")){
+                    if(device.getName().contains("0C")){
                         //if(result.getDevice().getName().equals(strBleName)){
                         SCANNED_MAC_ADDRESS = device.getName();
                         startConnecting(device);
@@ -445,7 +443,8 @@ public class MyBleService extends Service {
             isWaitingReply = true;
             isSendingPartData = true;
             int data_begin = 0;
-            int data_end = 15;
+            //int data_end = 15;
+            int data_end = 60;
             //sendStr = lstSendString.get(currentIdx).sendStr;
             Log.i("MainActivity","sendStr: " + sendStr);
             while (isSendingPartData){
@@ -459,7 +458,8 @@ public class MyBleService extends Service {
                         writeCustomCharacteristic(sendStr.substring(data_begin,data_end));
                     }
                     data_begin = data_end;
-                    data_end = data_end + 15;
+                    //data_end = data_end + 15;
+                    data_end = data_end + 60;
                     if (data_end > sendStr.length()){
                         data_end = sendStr.length();
                     }

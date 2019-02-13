@@ -1,9 +1,8 @@
-package promosys.com.unarvusoftwareupdate;
+package promosys.com.inovafirmwareupdate;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -12,7 +12,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/color_enabled"
+        android:backgroundTint="@color/colorPrimary"
         android:text="Click Here To Start Update"
         android:textColor="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"

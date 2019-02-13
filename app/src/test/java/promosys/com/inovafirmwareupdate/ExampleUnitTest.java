@@ -1,4 +1,4 @@
-package promosys.com.unarvusoftwareupdate;
+package promosys.com.inovafirmwareupdate;
 
 import org.junit.Test;
 

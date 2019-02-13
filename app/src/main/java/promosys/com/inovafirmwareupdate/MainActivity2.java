@@ -1,4 +1,4 @@
-package promosys.com.unarvusoftwareupdate;
+package promosys.com.inovafirmwareupdate;
 
 import android.Manifest;
 import android.app.Activity;
@@ -22,7 +22,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.renderscript.ScriptGroup;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +30,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.blikoon.qrcodescanner.QrCodeActivity;
@@ -93,8 +91,8 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
 
     private Toolbar toolbar;
     private long timeElapsed;
-    private long startTime = 100;
-    private long interval = 100;
+    private long startTime = 60;
+    private long interval = 60;
 
     private MyRefreshTimer refreshTimer;
     char ETX = (char)0x03;
@@ -115,8 +113,10 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
     int currentIdx = 0;
 
     StringBuffer strbuffBinFile = new StringBuffer();
-    private int intDataLength = 128;
-    private int portionByteLength = 100;
+    //private int intDataLength = 128;
+    private int intDataLength = 200;
+    //private int portionByteLength = 100;
+    private int portionByteLength = 200;
     public boolean isFlashStart = false;
 
     StringBuffer strBleBuffer = new StringBuffer();
@@ -125,8 +125,8 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
 
     InputStream inputFile, inputA,inputB;
     String fileName = "";
-    String fileNameA = "unlv1_0e03_v0_20a";
-    String fileNameB = "unlv1_0e03_v0_20b";
+    String fileNameA = "inova_wba_0c08_v0_02a";
+    String fileNameB = "inova_wba_0c08_v0_02b";
 
 
     private boolean isCurrentFirmwareA = false;
@@ -140,10 +140,12 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
     private boolean isBroadcastRegitered = false;
     private Menu myMenu;
 
-    private int targetedStartTime = 20;
-    private int targetedInterval = 20;
+    private int targetedStartTime = 30;
+    private int targetedInterval = 30;
 
     private GoogleApiClient mGoogleApiClient;
+
+    private int intErrorCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,16 +162,13 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
 
         refreshTimer = new MyRefreshTimer(startTime, interval);
 
-        inputA = getResources().openRawResource(R.raw.unlv1_0e03_v0_20a);
-        inputB = getResources().openRawResource(R.raw.unlv1_0e03_v0_20b);
+        inputA = getResources().openRawResource(R.raw.inova_wba_0c08_v0_02a);
+        inputB = getResources().openRawResource(R.raw.inova_wba_0c08_v0_02b);
 
         initIntentFilter();
         initPermission();
         initFragment();
         initLocation();
-        //checkLocationSettings();
-
-        //0E030601
     }
 
     private void initIntentFilter(){
@@ -227,11 +226,7 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                         break;
 
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied. But could be fixed by showing the user
-                        // a dialog.
                         try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
                             status.startResolutionForResult(MainActivity2.this, REQUEST_SWITCH_ON_LOCATION);
                         } catch (IntentSender.SendIntentException e) {}
                         break;
@@ -501,20 +496,9 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                     break;
 
                 case mBroadcastBleConnected:
-                    /*
-                    Toast.makeText(getApplicationContext(),"Connected",Toast.LENGTH_SHORT).show();
-                    changeFragment(FRAGMENT_CONNECTED_MAIN);
-                    fragmentConnectedMain.setButtonStatus(true);
-                    fragmentConnectedMain.hideButton(false);
-                    myMenu.getItem(0).setIcon(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.ic_action_bluetooth_on));
-                    toolbar.setSubtitle("Status: Connected");
-                    isRequestFirmware = true;
-                    isBleConnected = true;
-                    refreshTimer.start();
-                    */
 
-                    inputA = getResources().openRawResource(R.raw.unlv1_0e03_v0_20a);
-                    inputB = getResources().openRawResource(R.raw.unlv1_0e03_v0_20b);
+                    inputA = getResources().openRawResource(R.raw.inova_wba_0c08_v0_02a);
+                    inputB = getResources().openRawResource(R.raw.inova_wba_0c08_v0_02b);
 
                     binSize = 0;
                     begin = 0;
@@ -550,19 +534,6 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                     break;
 
                 case mBroadcastBleDisconnected:
-                    /*
-                    Toast.makeText(getApplicationContext(),"Disconnected",Toast.LENGTH_SHORT).show();
-                    toolbar.setSubtitle("Status: Disconnected");
-
-                    fragmentConnectedMain.setCurrentFirmware("N/A","N/A");
-                    fragmentConnectedMain.setButtonStatus(false);
-
-                    refreshTimer.cancel();
-
-                    myMenu.getItem(0).setIcon(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.ic_action_bluetooth_off));
-                    changeFragment(FRAGMENT_SCANNING);
-                    isBleConnected = false;
-                    */
 
                     binSize = 0;
                     begin = 0;
@@ -587,12 +558,6 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                     fragmentScanning.enableBtnConnectBle(true);
                     fragmentScanning.refreshButton();
 
-                    /*
-                    if(initializingDialog != null){
-                        initializingDialog.dismiss();
-                    }
-                    */
-
                     mBleService.disconnectDeviceSelected();
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -601,8 +566,6 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                             if(isRequestDisconnect){
                                 isRequestDisconnect = false;
                                 changeFragment(FRAGMENT_SCANNING);
-                                //disconnectingDialog.dismiss();
-                                //disconnectDialog.dismiss();
                             }
                         }
                     }, 20);
@@ -617,11 +580,8 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                     //fragmentScanning.hideLayoutConnected();
                     fragmentScanning.enableBtnConnectBle(true);
                     fragmentScanning.deviceNotFound();
-
                     toolbar.setSubtitle("Device Not Found");
-
                     fragmentScanning.refreshButton();
-
                     mBleService.disconnectDeviceSelected();
                     fragmentScanning.refreshButton();
                     break;
@@ -659,51 +619,78 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                     //if(isUploadingBin){
             if(bleReply.contains("FLASHWRITE")){
 
-                Log.i("MainActivity","Received Index: " + parts[2]);
-
-                try {
-                    int receivedIndex = Integer.parseInt(parts[2]);
-                    buildBinFile(receivedIndex);
-                    if (receivedIndex == currentIdx){
-                        currentIdx = currentIdx + 1;
-                    }
-
+                if(bleReply.contains("ERROR")){
                     mBleService.isWaitingReply = false;
-                    isTimerBleReply = false;
-                    isUploadingBin = true;
-                    intTimerCounter = 0;
-                    totalMessage = totalMessage + 1;
+                    intErrorCount = intErrorCount + 1;
+                    if(intErrorCount == 20){
+                        intErrorCount = 0;
+                        Toast.makeText(this,"Error occur while updating. Please try again.",Toast.LENGTH_SHORT).show();
 
-                    if (currentIdx ==lstSendString.size()){
-                        Log.i("MainActivity","Finish sending");
-
-                        //fragmentConnectedMain.progressUpload.setProgress(currentIdx);
-                        //fragmentConnectedMain.txtProgressUpload.setText("100%");
-                        //convertToBinFile();
-                        new BuildBinFile().execute("");
                         isUploadingBin = false;
-                        Log.i("MainActivity","Done converting");
                         fragmentConnectedMain.setButtonStatus(true);
                         refreshTimer.cancel();
 
-                    }else {
-                        begin = end;
-                        end = end + 100;
-                        if(end>binSize){
-                            end = binSize;
-                            portionByteLength = end - begin;
-                        }
-                        fragmentConnectedMain.progressUpload.setProgress(currentIdx);
-                        String progressPercentage = String.valueOf(convertToPercentage((currentIdx-1), lstSendString.size())).replace(".0","") + " %";
-                        fragmentConnectedMain.txtProgressUpload.setText(progressPercentage);
-                    }
-                }catch (NumberFormatException e){
-                    mBleService.isWaitingReply = false;
-                    isTimerBleReply = false;
-                    isUploadingBin = true;
-                    intTimerCounter = 0;
-                }
+                        binSize = 0;
+                        begin = 0;
+                        end = 0;
 
+                        currentIdx = 0;
+                        isBleConnected = true;
+                        isRequestDisconnect = false;
+                        mBleService.isWaitingReply = false;
+                        mBleService.isSendingPartData = false;
+
+                        fragmentConnectedMain.setButtonStatus(true);
+                        fragmentConnectedMain.hideButton(false);
+                    }
+
+                }else {
+                    Log.i("MainActivity","Received Index: " + parts[2]);
+                    intErrorCount = 0;
+                    try {
+                        int receivedIndex = Integer.parseInt(parts[2]);
+                        buildBinFile(receivedIndex);
+                        if (receivedIndex == currentIdx){
+                            currentIdx = currentIdx + 1;
+                        }
+
+                        mBleService.isWaitingReply = false;
+                        isTimerBleReply = false;
+                        isUploadingBin = true;
+                        intTimerCounter = 0;
+                        totalMessage = totalMessage + 1;
+
+                        if (currentIdx ==lstSendString.size()){
+                            Log.i("MainActivity","Finish sending");
+
+                            //fragmentConnectedMain.progressUpload.setProgress(currentIdx);
+                            //fragmentConnectedMain.txtProgressUpload.setText("100%");
+                            //convertToBinFile();
+                            new BuildBinFile().execute("");
+                            isUploadingBin = false;
+                            Log.i("MainActivity","Done converting");
+                            fragmentConnectedMain.setButtonStatus(true);
+                            refreshTimer.cancel();
+
+                        }else {
+                            begin = end;
+                            //end = end + 100;
+                            end = end + 400;
+                            if(end>binSize){
+                                end = binSize;
+                                portionByteLength = end - begin;
+                            }
+                            fragmentConnectedMain.progressUpload.setProgress(currentIdx);
+                            String progressPercentage = String.valueOf(convertToPercentage((currentIdx-1), lstSendString.size())).replace(".0","") + " %";
+                            fragmentConnectedMain.txtProgressUpload.setText(progressPercentage);
+                        }
+                    }catch (NumberFormatException e){
+                        mBleService.isWaitingReply = false;
+                        isTimerBleReply = false;
+                        isUploadingBin = true;
+                        intTimerCounter = 0;
+                    }
+                }
 
             }else if(bleReply.contains("ERROR")){
                 mBleService.isWaitingReply = false;
@@ -914,6 +901,7 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
         Log.i("MainActivity","binSize: " + binSize);
         Log.i("MainActivity","portionByte.length: " + portionByte.length);
         if(portionByte.length == binSize){
+            Log.i("MainActivity","Flashboot command issued");
             String strData = buildStringToDevice("|FLASHBOOT|");
             mBleService.sendLongString(strData);
         }else {
@@ -1087,7 +1075,6 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                 refreshTimer.start();
 
             }else if(isFlashStart){
-                //String flashRequest = "|FLASHSTART|" + "SmartCity_Bin_V2_v0.08" + "|" + String.valueOf(binSize) + "|";
                 String flashRequest = "|FLASHSTART|" + fileName + "|" + String.valueOf(binSize) + "|";
                 String strData = buildStringToDevice(flashRequest);
                 mBleService.sendLongString(strData);
@@ -1106,7 +1093,7 @@ public class MainActivity2 extends AppCompatActivity implements GoogleApiClient.
                 refreshTimer.start();
 
             }else if(isTimerBleReply){
-                if(intTimerCounter == 50){
+                if(intTimerCounter == 25){
                     intTimerCounter = 0;
                     mBleService.isWaitingReply = false;
 

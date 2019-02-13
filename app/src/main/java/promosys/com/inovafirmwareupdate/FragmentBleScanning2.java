@@ -1,23 +1,17 @@
-package promosys.com.unarvusoftwareupdate;
+package promosys.com.inovafirmwareupdate;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IntegerRes;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dd.morphingbutton.MorphingButton;
@@ -56,9 +50,7 @@ public class FragmentBleScanning2 extends Fragment {
             public void onClick(View v) {
                 morphToSquare(btnScanQr,false,"Scan QR",R.color.color_disabled);
                 morphToSquare(btnScanNearby,false,"Scan Nearby Device",R.color.color_disabled);
-                //simulateProgress1(btnConnectBle);
                 simulateProgress(btnConnectBle);
-                //mainActivity.connectToBluetooth(edtMacAdress.getText().toString());
                 mainActivity.connectToBluetooth(processEnteredName(edtMacAdress.getText().toString()));
                 isConnectBtnPressed = true;
                 //onMorphButton1Clicked(btnConnectBle);
